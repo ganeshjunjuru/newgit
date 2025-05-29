@@ -1,0 +1,193 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Universal Reset:
+   These rules explicitly remove default margins and paddings
+   that browsers often apply to the <html> and <body> elements.
+   This helps ensure your fixed header truly touches the top
+   with no visible gaps.
+   `box-sizing: border-box;` is included for consistent box model behavior.
+   `overflow-x: hidden;` prevents horizontal scrolling if content overflows,
+   which is common with responsive designs.
+*/
+html, body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+/* Smooth Scrolling:
+   This property makes all in-page navigation (like clicking on anchor links
+   e.g., <a href="#section-id">) scroll smoothly to the target section
+   instead of instantly jumping.
+*/
+html {
+  scroll-behavior: smooth;
+}
+
+/* Global Font Styling:
+   This sets a global font for your body. 'Inter' is a common choice for modern UIs.
+   Ensure 'Inter' is imported or linked in your public/index.html if you use it.
+*/
+body {
+  font-family: 'Inter', sans-serif;
+  /* Add any other global body styles here, e.g., default text color, background color */
+  /* color: #333; */
+  /* background-color: #f8f8f8; */
+}
+
+/* You can add custom component styles or utility classes below these sections */
+/* For example:
+.custom-button {
+  @apply bg-blue-500 text-white font-bold py-2 px-4 rounded;
+}
+*/
+
+/* Your existing global styles in index.css */
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-moz-smoothing: grayscale;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+      monospace;
+}
+
+/* --- Floating Action Bar Styles --- */
+
+.floating-action-bar-container {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+    padding: 0;
+    overflow: hidden;
+    /* NEW: Specific border-radius for top-left and bottom-left only */
+    border-radius: 8px 0 0 8px; /* top-left, top-right, bottom-right, bottom-left */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    transition: width 0.3s ease, height 0.3s ease, border-radius 0.3s ease, background-color 0.3s ease;
+    background-color: rgba(255, 255, 255, 0.9);
+    /* backdrop-filter: blur(5px); */ /* Optional: Frosted glass effect, check browser support */
+}
+
+/* Position for left side (now flush by default) */
+.floating-action-bar-container.left {
+    left: 0;
+    /* No need to override border-radius here, as it's set on the container directly */
+}
+
+/* Position for right side (still retained for flexibility) */
+.floating-action-bar-container.right {
+    right: 0;
+    /* NEW: Specific border-radius for top-right and bottom-right only when on right */
+    border-radius: 0 8px 8px 0;
+}
+
+/* Styles when collapsed */
+.floating-action-bar-container.collapsed {
+    width: 50px;
+    height: 50px;
+    /* NEW: Full border-radius when collapsed, as it becomes a single button */
+    border-radius: 8px;
+}
+
+/* Inner list to hold the items */
+.floating-action-bar-inner {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Individual button/link wrapper */
+.fab-item-wrapper {
+    margin: 0;
+    padding: 0;
+}
+
+/* Individual button/link styling */
+.fab-item {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    /* NEW: Ensure no border-radius by default for individual items */
+    border-radius: 0;
+    transition: background-color 0.3s ease, transform 0.2s ease, filter 0.3s ease, box-shadow 0.3s ease; /* Added box-shadow to transition */
+}
+
+/* Toggle button specific styles */
+.fab-item.fab-toggle-btn {
+    background: #333 !important;
+    color: white;
+}
+
+/* NEW: Rounded top-left corner for the first item (toggle button) */
+.fab-item-wrapper:first-child .fab-item {
+    border-top-left-radius: 8px;
+}
+
+/* NEW: Rounded bottom-left corner for the last item (when expanded) */
+.floating-action-bar-container:not(.collapsed) .fab-item-wrapper:last-child .fab-item {
+    border-bottom-left-radius: 8px;
+}
+
+/* When collapsed, the toggle button itself needs full rounded corners */
+.floating-action-bar-container.collapsed .fab-toggle-btn {
+    border-radius: 8px;
+}
+
+/* NEW: Glow effect on hover */
+.fab-item:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+    /* The "glow" effect: subtle shadow with a spread and color */
+    box-shadow: 0 0 15px 5px rgba(0, 123, 255, 0.7); /* A blue glow, adjust color as needed */
+    z-index: 1001; /* Ensure hover item is on top if overlap occurs */
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+    .floating-action-bar-container {
+        width: 45px;
+        height: 45px;
+        right: 0; /* Default to right on smaller screens */
+        left: unset;
+        /* Re-adjust border radius for right-side flush on mobile */
+        border-radius: 0 8px 8px 0;
+    }
+    .fab-item {
+        width: 45px;
+        height: 45px;
+    }
+    .floating-action-bar-container.collapsed {
+        width: 45px;
+        height: 45px;
+    }
+    /* Adjust specific item radii for mobile if it's on the right */
+    .floating-action-bar-container.right .fab-item-wrapper:first-child .fab-item {
+        border-top-right-radius: 8px;
+        border-top-left-radius: 0; /* Ensure left is sharp */
+    }
+    .floating-action-bar-container.right:not(.collapsed) .fab-item-wrapper:last-child .fab-item {
+        border-bottom-right-radius: 8px;
+        border-bottom-left-radius: 0; /* Ensure left is sharp */
+    }
+    .floating-action-bar-container.collapsed .fab-toggle-btn {
+        border-radius: 8px;
+    }
+}
